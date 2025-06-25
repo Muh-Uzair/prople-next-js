@@ -1,4 +1,5 @@
 import React from "react";
+import LandingPage from "@/pages/landing-page";
 
 const page: React.FC = () => {
   // VARS
@@ -6,7 +7,7 @@ const page: React.FC = () => {
   // FUNCTIONS
 
   // JSX
-  return <div>home</div>;
+  return <LandingPage />;
 };
 
 export default page;

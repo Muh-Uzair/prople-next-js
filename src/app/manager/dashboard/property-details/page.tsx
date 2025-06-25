@@ -6,7 +6,7 @@ const page: React.FC = () => {
   // FUNCTIONS
 
   // JSX
-  return <div>manager/dashboard/home</div>;
+  return <div>manager/dashboard/property-details</div>;
 };
 
 export default page;
