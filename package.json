@@ -8,6 +8,12 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "packageManager": "npm@11.1.0",
+  "overrides": {
+    "next": "15.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
