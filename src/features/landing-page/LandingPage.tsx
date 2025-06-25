@@ -6,7 +6,12 @@ const LandingPage: React.FC = () => {
   // FUNCTIONS
 
   // JSX
-  return <div>LandingPage</div>;
+  return (
+    <div>
+      <header className="h-[50px]">header</header>
+      <main>main body</main>
+    </div>
+  );
 };
 
 export default LandingPage;
