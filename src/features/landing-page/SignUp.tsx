@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Dialog,
@@ -9,10 +11,48 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+// Zod schema
+const formSchema = z.object({
+  username: z
+    .string()
+    .min(2, { message: "Username must be at least 2 characters." }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters." }),
+  email: z.string().email({ message: "Invalid email address." }).optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 const SignUp: React.FC = () => {
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      email: "",
+    },
+  });
+
+  const onSubmit = (values: FormValues) => {
+    console.log("Submitted Values:", values);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -27,52 +67,90 @@ const SignUp: React.FC = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <form className="mt-6 space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="userName">
-              Username <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              type="text"
-              id="userName"
-              placeholder="e.g. manager@burj-khalifa"
-              required
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-6 space-y-5"
+          >
+            {/* Username Field */}
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Username <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g. manager@burj-khalifa"
+                      autoComplete="username"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This will be your primary login.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="accountPassword">
-              Password <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              type="password"
-              id="accountPassword"
-              placeholder="Enter a secure password"
-              required
+            {/* Password Field */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Password <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter a secure password"
+                      autoComplete="new-password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <Separator className="my-[30px]" />
+            <Separator className="my-[30px]" />
 
-          <div className="space-y-2">
-            <Label htmlFor="email">
-              Email{" "}
-              <span className="font-light text-gray-500">(optional)</span>{" "}
-            </Label>
-            <Input
-              type="email"
-              id="email"
-              placeholder="e.g. manager@yourdomain.com"
+            {/* Email Field */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Email{" "}
+                    <span className="font-light text-gray-500">(optional)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="e.g. manager@yourdomain.com"
+                      autoComplete="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Add a valid email to enable email-based login and recovery.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <p className="text-muted-foreground text-sm">
-              Add a valid email to enable email-based login and recovery.
-            </p>
-          </div>
 
-          <Button type="submit" className="mt-2 w-full">
-            Sign Up
-          </Button>
-        </form>
+            <Button type="submit" className="mt-2 w-full">
+              Sign Up
+            </Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
