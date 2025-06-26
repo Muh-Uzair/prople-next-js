@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" className="light">
       <body className={roboto.variable}>{children}</body>
     </html>
   );
