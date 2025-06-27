@@ -30,7 +30,11 @@ import { z } from "zod";
 const formSchema = z.object({
   username: z
     .string()
-    .min(2, { message: "Username must be at least 2 characters." }),
+    .min(2, { message: "Username must be at least 2 characters." })
+    .regex(/^manager@[\w\-]+$/, {
+      message:
+        "Username must start with 'manager@' and be followed by a valid building name (letters, numbers, hyphens).",
+    }),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters." }),
@@ -62,8 +66,9 @@ const SignUp: React.FC = () => {
         <DialogHeader>
           <DialogTitle>Create your building manager account</DialogTitle>
           <DialogDescription className="text-muted-foreground pt-1">
-            Use a custom username like <code>manager@burj-khalifa</code>. This
-            will be your primary login.
+            Choose a unique username in the format{" "}
+            <code>manager@building-name</code>, e.g.,{" "}
+            <code>manager@burj-khalifa</code>.
           </DialogDescription>
         </DialogHeader>
 
