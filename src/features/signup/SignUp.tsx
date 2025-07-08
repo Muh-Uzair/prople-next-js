@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import OrSeparator from "@/components/OrSeparator";
 import { DialogDescription } from "@radix-ui/react-dialog";
-
+import { usePerformSignup } from "./usePerformSignup";
 // Zod
 const formSchema = z
   .object({
@@ -51,7 +51,9 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>;
 
+// CMP CMP CMP
 const SignUp: React.FC = () => {
+  // VARS
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,11 +62,16 @@ const SignUp: React.FC = () => {
       confirmPassword: "",
     },
   });
+  const { signup, status } = usePerformSignup();
 
-  const onSubmit = (values: FormValues) => {
-    console.log("Submitted Values:", values);
+  console.log(status);
+
+  // FUNCTIONS
+  const onSubmit = async (values: FormValues) => {
+    signup(values);
   };
 
+  // JSX JSX JSX
   return (
     <Dialog>
       <DialogTrigger asChild>

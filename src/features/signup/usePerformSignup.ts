@@ -1,0 +1,54 @@
+"use client";
+
+import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
+import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
+import { useMutation } from "@tanstack/react-query";
+
+type FormValues = {
+  username: string;
+  password: string;
+};
+
+export function usePerformSignup() {
+  // VARS
+  const { showErrorToast } = useCustomErrorToast();
+  const { showSuccessToast } = useCustomSuccessToast();
+
+  // FUNCTION
+  const mutation = useMutation({
+    mutationFn: async (values: FormValues) => {
+      const res = await fetch(
+        `http://127.0.0.1:4000/api/v1/building-manager/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            username: values.username,
+            password: values.password,
+          }),
+        },
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Signup failed");
+      }
+
+      return res.json(); // Or return res if you don't need to parse it
+    },
+    onSuccess: () => {
+      showSuccessToast("Sign up success");
+    },
+    onError: () => {
+      showErrorToast("Sign up failed");
+    },
+  });
+
+  return {
+    signup: mutation.mutate,
+    status: mutation.status,
+  };
+}
