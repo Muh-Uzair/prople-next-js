@@ -25,6 +25,8 @@ import { z } from "zod";
 import OrSeparator from "@/components/OrSeparator";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { usePerformSignup } from "./usePerformSignup";
+import LoadingSpinner from "@/components/spinner-02";
+
 // Zod
 const formSchema = z
   .object({
@@ -62,14 +64,15 @@ const SignUp: React.FC = () => {
       confirmPassword: "",
     },
   });
-  const { signup, status } = usePerformSignup();
-
-  console.log(status);
+  const { signup, status: statusSignUp } = usePerformSignup();
 
   // FUNCTIONS
   const onSubmit = async (values: FormValues) => {
     signup(values);
   };
+
+  if (statusSignUp === "success") {
+  }
 
   // JSX JSX JSX
   return (
@@ -158,6 +161,11 @@ const SignUp: React.FC = () => {
             />
 
             <Button type="submit" className="mt-4 w-full">
+              {statusSignUp === "pending" && (
+                <>
+                  <LoadingSpinner />{" "}
+                </>
+              )}
               Sign Up
             </Button>
           </form>

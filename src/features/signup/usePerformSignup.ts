@@ -1,7 +1,7 @@
 "use client";
 
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
-import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
+import { useFetchBuildingManager } from "@/hooks/useFetchBuildingManager";
 import { useMutation } from "@tanstack/react-query";
 
 type FormValues = {
@@ -11,14 +11,15 @@ type FormValues = {
 
 export function usePerformSignup() {
   // VARS
+
+  const { mutateCurrBuildingManager } = useFetchBuildingManager();
   const { showErrorToast } = useCustomErrorToast();
-  const { showSuccessToast } = useCustomSuccessToast();
 
   // FUNCTION
   const mutation = useMutation({
     mutationFn: async (values: FormValues) => {
       const res = await fetch(
-        `http://127.0.0.1:4000/api/v1/building-manager/signup`,
+        `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/signup`,
         {
           method: "POST",
           headers: {
@@ -40,7 +41,7 @@ export function usePerformSignup() {
       return res.json(); // Or return res if you don't need to parse it
     },
     onSuccess: () => {
-      showSuccessToast("Sign up success");
+      mutateCurrBuildingManager();
     },
     onError: () => {
       showErrorToast("Sign up failed");
