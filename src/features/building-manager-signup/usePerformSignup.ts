@@ -12,7 +12,9 @@ type FormValues = {
 export function usePerformSignup() {
   // VARS
 
-  const { mutateCurrBuildingManager } = useFetchBuildingManager();
+  const { mutateCurrBuildingManager } = useFetchBuildingManager({
+    performSignUp: true,
+  });
   const { showErrorToast } = useCustomErrorToast();
 
   // FUNCTION

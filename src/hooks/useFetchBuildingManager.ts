@@ -1,12 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCustomErrorToast } from "./useCustomErrorToast";
 import { useCustomSuccessToast } from "./useCustomSuccessToast";
+import { useBuildingManagerStore } from "@/stores/buildingManagerStore";
 
-export const useFetchBuildingManager = () => {
+interface IUseFetchBuildingManager {
+  performSignUp?: boolean | undefined;
+}
+
+export const useFetchBuildingManager = ({
+  performSignUp,
+}: IUseFetchBuildingManager) => {
   // VARS
   const queryClient = useQueryClient();
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
+  const { setIsAuthBuildingManager, setDataBuildingManager } =
+    useBuildingManagerStore();
 
   // FUNCTION
   const {
@@ -32,10 +41,16 @@ export const useFetchBuildingManager = () => {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(["currBuildingManager"], data);
-      showSuccessToast("Sign up success");
+      setIsAuthBuildingManager(true);
+      setDataBuildingManager(data?.data?.buildingManager);
+      if (performSignUp) {
+        showSuccessToast("Sign up success");
+      }
     },
     onError: () => {
-      showErrorToast("Sign up failed");
+      if (performSignUp) {
+        showErrorToast("Sign up failed");
+      }
     },
   });
 
