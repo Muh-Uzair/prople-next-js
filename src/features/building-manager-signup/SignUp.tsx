@@ -7,15 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,42 +22,59 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import OrSeparator from "@/components/OrSeparator";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { usePerformSignup } from "./usePerformSignup";
+import LoadingSpinner from "@/components/spinner-02";
 
-// Zod schema
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(2, { message: "Username must be at least 2 characters." })
-    .regex(/^manager@[\w\-]+$/, {
-      message:
-        "Username must start with 'manager@' and be followed by a valid building name (letters, numbers, hyphens).",
-    }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters long." })
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/, {
-      message:
-        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.",
-    }),
-  email: z.string().email({ message: "Invalid email address." }).optional(),
-});
+// Zod
+const formSchema = z
+  .object({
+    username: z
+      .string()
+      .min(2, { message: "Username must be at least 2 characters." })
+      .regex(/^manager@[\w\-]+$/, {
+        message:
+          "Username must start with 'manager@' and be followed by a valid building name (letters, numbers, hyphens).",
+      }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters long." })
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/, {
+        message:
+          "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.",
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"], // 👈 put error on confirmPassword field
+    message: "Passwords do not match.",
+  });
 
 type FormValues = z.infer<typeof formSchema>;
 
+// CMP CMP CMP
 const SignUp: React.FC = () => {
+  // VARS
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       password: "",
-      email: "",
+      confirmPassword: "",
     },
   });
+  const { signup, status: statusSignUp } = usePerformSignup();
 
-  const onSubmit = (values: FormValues) => {
-    console.log("Submitted Values:", values);
+  // FUNCTIONS
+  const onSubmit = async (values: FormValues) => {
+    signup(values);
   };
 
+  if (statusSignUp === "success") {
+  }
+
+  // JSX JSX JSX
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -69,18 +83,18 @@ const SignUp: React.FC = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create your building manager account</DialogTitle>
-          <DialogDescription className="text-muted-foreground pt-1">
-            Choose a unique username in the format{" "}
-            <code>manager@building-name</code>, e.g.,{" "}
-            <code>manager@burj-khalifa</code>.
+          <DialogDescription>
+            Fill in the details below to create your building manager account.
           </DialogDescription>
         </DialogHeader>
+        <div className="mt-[10px] w-full">
+          <Button className="w-full">Sign up with Google</Button>
+        </div>
+
+        <OrSeparator />
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="mt-6 space-y-5"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* Username Field */}
             <FormField
               control={form.control}
@@ -97,9 +111,6 @@ const SignUp: React.FC = () => {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    This will be your primary login.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -117,7 +128,7 @@ const SignUp: React.FC = () => {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Enter a secure password"
+                      placeholder="••••••••"
                       autoComplete="new-password"
                       {...field}
                     />
@@ -127,35 +138,34 @@ const SignUp: React.FC = () => {
               )}
             />
 
-            <Separator className="my-[30px]" />
-
-            {/* Email Field */}
+            {/*Confirm Password Field */}
             <FormField
               control={form.control}
-              name="email"
+              name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Email{" "}
-                    <span className="font-light text-gray-500">(optional)</span>
+                    Confirm Password <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type="email"
-                      placeholder="e.g. manager@yourdomain.com"
-                      autoComplete="email"
+                      type="password"
+                      placeholder="••••••••"
+                      autoComplete="new-password"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Add a valid email to enable email-based login and recovery.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="mt-2 w-full">
+            <Button type="submit" className="mt-4 w-full">
+              {statusSignUp === "pending" && (
+                <>
+                  <LoadingSpinner />{" "}
+                </>
+              )}
               Sign Up
             </Button>
           </form>

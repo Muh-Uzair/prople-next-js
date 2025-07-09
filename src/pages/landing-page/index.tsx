@@ -1,13 +1,27 @@
 import LandingPage from "@/features/landing-page/LandingPage";
-import React from "react";
+import React, { useEffect } from "react";
+import { useBuildingManagerStore } from "@/stores/buildingManagerStore";
+import { useFetchBuildingManager } from "@/hooks/useFetchBuildingManager";
 
-const index: React.FC = () => {
+const Index: React.FC = () => {
   // VARS
+  const { isAuthBuildingManager } = useBuildingManagerStore();
+  const { mutateCurrBuildingManager } = useFetchBuildingManager({
+    performSignUp: false,
+  });
 
   // FUNCTIONS
+  useEffect(() => {
+    const innerFun = () => {
+      mutateCurrBuildingManager();
+    };
 
-  // JSX
+    if (!isAuthBuildingManager) {
+      innerFun();
+    }
+  }, [isAuthBuildingManager, mutateCurrBuildingManager]);
+
   return <LandingPage />;
 };
 
-export default index;
+export default Index;

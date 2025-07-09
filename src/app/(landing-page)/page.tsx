@@ -1,13 +1,29 @@
+"use client";
+
 import React from "react";
 import LandingPage from "@/pages/landing-page";
+import { QueryClient } from "@tanstack/react-query";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClientProvider } from "@tanstack/react-query";
+import BottomNav from "@/components/BottomNav";
+import { Toaster } from "@/components/ui/sonner";
 
-const page: React.FC = () => {
-  // VARS
+export const queryClient = new QueryClient();
 
-  // FUNCTIONS
-
+const Page: React.FC = () => {
   // JSX
-  return <LandingPage />;
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <main>
+        {" "}
+        <LandingPage />
+        <BottomNav />
+      </main>
+      <Toaster richColors position="top-center" />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+    </QueryClientProvider>
+  );
 };
 
-export default page;
+export default Page;
