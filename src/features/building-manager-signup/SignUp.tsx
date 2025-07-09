@@ -71,9 +71,6 @@ const SignUp: React.FC = () => {
     signup(values);
   };
 
-  if (statusSignUp === "success") {
-  }
-
   // JSX JSX JSX
   return (
     <Dialog>
