@@ -1,5 +1,3 @@
-"use client";
-
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useFetchBuildingManager } from "@/hooks/useFetchBuildingManager";
 import { useMutation } from "@tanstack/react-query";

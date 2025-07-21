@@ -19,6 +19,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import { useSigninBuildingManager } from "./useSigninBuildingManager";
 
 interface ISigninBuildingManager {
   setIdentity: Dispatch<SetStateAction<"buildingManager" | "tenant" | "idle">>;
@@ -56,10 +57,11 @@ const SigninBuildingManager: React.FC<ISigninBuildingManager> = ({
       password: "",
     },
   });
+  const { mutateCurrBuildingManager } = useSigninBuildingManager();
 
   // FUNCTIONS
   const onSubmit = async (values: FormValues) => {
-    console.log(values);
+    mutateCurrBuildingManager(values);
   };
 
   // JSX

@@ -23,14 +23,11 @@ const LogoutConfirmDialog: React.FC<ILogoutConfirmDialog> = ({
   setOpenDialog,
 }) => {
   // VARS
-  const { mutateLogout, statusLogout } = usePerformLogout();
+  const { mutateLogout, statusLogout } = usePerformLogout({ setOpenDialog });
 
   // FUNCTIONS
   const handleLogout = () => {
     mutateLogout();
-    if (statusLogout === "success") {
-      setOpenDialog(false);
-    }
   };
 
   // JSX

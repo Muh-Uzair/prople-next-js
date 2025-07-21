@@ -3,7 +3,11 @@ import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
 import { useBuildingManagerStore } from "@/stores/buildingManagerStore";
 import { useMutation } from "@tanstack/react-query";
 
-export const usePerformLogout = () => {
+interface IUsePerformLogout {
+  setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const usePerformLogout = ({ setOpenDialog }: IUsePerformLogout) => {
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
   const { resetBuildingManager } = useBuildingManagerStore();
@@ -27,10 +31,11 @@ export const usePerformLogout = () => {
     },
     onSuccess: () => {
       resetBuildingManager();
-      showSuccessToast();
+      setOpenDialog(false);
+      showSuccessToast("Sign out success");
     },
     onError: () => {
-      showErrorToast();
+      showErrorToast("Unable to sign out");
     },
   });
 
