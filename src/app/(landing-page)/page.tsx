@@ -7,6 +7,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { QueryClientProvider } from "@tanstack/react-query";
 import BottomNav from "@/components/BottomNav";
 import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "next-auth/react";
 
 export const queryClient = new QueryClient();
 
@@ -15,13 +16,15 @@ const Page: React.FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <main>
-        {" "}
-        <LandingPage />
-        <BottomNav />
-      </main>
-      <Toaster richColors position="top-center" />
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <SessionProvider>
+        <main>
+          {" "}
+          <LandingPage />
+          <BottomNav />
+        </main>
+        <Toaster richColors position="top-center" />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      </SessionProvider>
     </QueryClientProvider>
   );
 };

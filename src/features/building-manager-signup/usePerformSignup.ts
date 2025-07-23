@@ -1,5 +1,6 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
-import { useFetchBuildingManager } from "@/hooks/useFetchBuildingManager";
+import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
+
 import { useMutation } from "@tanstack/react-query";
 
 type FormValues = {
@@ -10,10 +11,8 @@ type FormValues = {
 export function usePerformSignup() {
   // VARS
 
-  const { mutateCurrBuildingManager } = useFetchBuildingManager({
-    performSignUp: true,
-  });
   const { showErrorToast } = useCustomErrorToast();
+  const { showSuccessToast } = useCustomSuccessToast();
 
   // FUNCTION
   const mutation = useMutation({
@@ -41,7 +40,7 @@ export function usePerformSignup() {
       return res.json(); // Or return res if you don't need to parse it
     },
     onSuccess: () => {
-      mutateCurrBuildingManager();
+      showSuccessToast("Sign up success");
     },
     onError: () => {
       showErrorToast("Sign up failed");

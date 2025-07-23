@@ -1,6 +1,5 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
-import { useBuildingManagerStore } from "@/stores/buildingManagerStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type FormValues = {
@@ -13,8 +12,6 @@ export const useSigninBuildingManager = () => {
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
   const queryClient = useQueryClient();
-  const { setIsAuthBuildingManager, setDataBuildingManager } =
-    useBuildingManagerStore();
 
   // FUNCTION
   const {
@@ -43,12 +40,11 @@ export const useSigninBuildingManager = () => {
         throw new Error(errorText || "Signup failed");
       }
 
-      return res.json();
+      const json = await res.json();
+      return json.data;
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["currBuildingManager"], data);
-      setIsAuthBuildingManager(true);
-      setDataBuildingManager(data?.data?.buildingManager);
+      queryClient.setQueryData(["buildingManager", "byJwt"], data);
       showSuccessToast("Sign in successful");
     },
     onError: () => {

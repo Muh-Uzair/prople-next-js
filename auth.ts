@@ -8,19 +8,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       try {
         const email = user?.email;
 
-        console.log(
-          "Hello----------------------------------------------------------",
-        );
-        console.log(process.env.NEXT_PUBLIC_BACK_END_URL);
-
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/create-building-manager-google`,
+          `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/signup-google`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: "include",
             body: JSON.stringify({
               email: email,
             }),
