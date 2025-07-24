@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,20 +12,18 @@ import { Button } from "@/components/ui/button";
 import OrSeparator from "@/components/OrSeparator";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import SignUpForm from "./SignUpForm";
-
 import SignUpWithGoogle from "./SignUpWithGoogle";
 
-// CMP CMP CMP
 const SignUp: React.FC = () => {
-  // VARS
+  // State to control dialog
+  const [isOpen, setIsOpen] = useState(false);
 
-  // FUNCTIONS
-
-  // JSX JSX JSX
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Sign Up</Button>
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
+          Sign Up
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -39,7 +37,7 @@ const SignUp: React.FC = () => {
 
         <OrSeparator />
 
-        <SignUpForm />
+        <SignUpForm setIsOpen={setIsOpen} />
       </DialogContent>
     </Dialog>
   );

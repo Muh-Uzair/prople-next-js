@@ -6,7 +6,7 @@ const LandingPage: React.FC = () => {
   console.log();
   return (
     <div>
-      <main className="pb-[50px]">Landing page</main>
+      <main className="pt-[50px]">Landing page</main>
     </div>
   );
 };

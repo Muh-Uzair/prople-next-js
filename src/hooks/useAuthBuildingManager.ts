@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { IBuildingManager } from "@/types/building-manager-types";
+import { useLandingPageStore } from "@/stores/useLandingPageStore";
 
 export const useAuthBuildingManager = () => {
   const { data: authJsSession, status: sessionStatus } = useSession();
+  const buildingManagerStatus = useLandingPageStore(
+    (state) => state.buildingManagerStatus,
+  );
 
-  // Query for authenticated users (using Auth.js session)
+  // FUNCTION Query for authenticated users (using Auth.js session)
   const {
-    data: dataBuildingManagerEmail,
+    data: dataBuildingManagerEmail = {},
     status: statusBuildingManagerEmail,
     isLoading: loadingByEmail,
   } = useQuery<IBuildingManager>({
@@ -16,7 +20,7 @@ export const useAuthBuildingManager = () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/current-by-email`,
         {
-          method: "POST", // Changed to POST since you're sending data
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -31,28 +35,28 @@ export const useAuthBuildingManager = () => {
       }
 
       const json = await res.json();
-      return json.data; // Removed extra .data if not needed
+      return json.data;
     },
     enabled: sessionStatus === "authenticated" && !!authJsSession?.user?.email,
     retry: false,
   });
 
-  // Query for users with JWT cookie (when Auth.js session doesn't exist)
+  // FUNCTION Query for users with JWT cookie (when Auth.js session doesn't exist)
   const {
-    data: dataBuildingManagerJwt,
+    data: dataBuildingManagerJwt = {},
     status: statusBuildingManagerJwt,
     isLoading: loadingByJwt,
   } = useQuery({
-    queryKey: ["buildingManager", "byJwt"],
+    queryKey: ["buildingManager", "byJwt", buildingManagerStatus],
     queryFn: async () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/current`,
         {
-          method: "GET", // GET is fine here since you're not sending body data
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // This will send JWT cookie
+          credentials: "include",
         },
       );
 
@@ -63,15 +67,16 @@ export const useAuthBuildingManager = () => {
       const json = await res.json();
       return json.data;
     },
-    enabled: sessionStatus === "unauthenticated", // Only when no Auth.js session
+    // Only execute when: no Auth.js session AND JWT cookie exists
+    enabled: sessionStatus === "unauthenticated",
     retry: false,
   });
 
   // Return the appropriate data based on session status
   const dataBuildingManager =
     sessionStatus === "authenticated"
-      ? dataBuildingManagerEmail
-      : dataBuildingManagerJwt;
+      ? dataBuildingManagerEmail || {}
+      : dataBuildingManagerJwt || {};
 
   const isLoading =
     sessionStatus === "loading" || loadingByEmail || loadingByJwt;

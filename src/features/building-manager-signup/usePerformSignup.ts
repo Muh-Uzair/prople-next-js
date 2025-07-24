@@ -1,5 +1,6 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
+import { useLandingPageStore } from "@/stores/useLandingPageStore";
 
 import { useMutation } from "@tanstack/react-query";
 
@@ -7,12 +8,18 @@ type FormValues = {
   username: string;
   password: string;
 };
+interface ISignUpForm {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export function usePerformSignup() {
+export function usePerformSignup({ setIsOpen }: ISignUpForm) {
   // VARS
 
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
+  const setBuildingManagerStatus = useLandingPageStore(
+    (state) => state.setBuildingManagerStatus,
+  );
 
   // FUNCTION
   const mutation = useMutation({
@@ -41,7 +48,8 @@ export function usePerformSignup() {
     },
     onSuccess: () => {
       showSuccessToast("Sign up success");
-      window.location.reload();
+      setBuildingManagerStatus("success");
+      setIsOpen(false);
     },
     onError: () => {
       showErrorToast("Sign up failed");

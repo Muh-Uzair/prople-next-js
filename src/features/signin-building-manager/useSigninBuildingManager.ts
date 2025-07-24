@@ -1,5 +1,6 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
+import { useLandingPageStore } from "@/stores/useLandingPageStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type FormValues = {
@@ -12,12 +13,15 @@ export const useSigninBuildingManager = () => {
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
   const queryClient = useQueryClient();
+  const setBuildingManagerStatus = useLandingPageStore(
+    (state) => state.setBuildingManagerStatus,
+  );
 
   // FUNCTION
   const {
-    mutate: mutateCurrBuildingManager,
-    data: dataCurrBuildingManager,
-    status: statusCurrBuildingManager,
+    mutate: mutateSigninBuildingManager,
+    data: dataSigninBuildingManager,
+    status: statusSigninBuildingManager,
   } = useMutation({
     mutationFn: async (values: FormValues) => {
       const res = await fetch(
@@ -46,7 +50,7 @@ export const useSigninBuildingManager = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(["buildingManager", "byJwt"], data);
       showSuccessToast("Sign in successful");
-      window.location.reload();
+      setBuildingManagerStatus("success");
     },
     onError: () => {
       showErrorToast("Sign in failed");
@@ -54,8 +58,8 @@ export const useSigninBuildingManager = () => {
   });
 
   return {
-    mutateCurrBuildingManager,
-    dataCurrBuildingManager,
-    statusCurrBuildingManager,
+    mutateSigninBuildingManager,
+    dataSigninBuildingManager,
+    statusSigninBuildingManager,
   };
 };

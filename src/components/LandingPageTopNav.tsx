@@ -16,31 +16,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import LogoutConfirmDialog from "@/features/building-manager-signout/SignoutConfirmDialog";
 import { useAuthBuildingManager } from "@/hooks/useAuthBuildingManager";
+import { useLandingPageStore } from "@/stores/useLandingPageStore";
 
-const BottomNav = () => {
+const LandingPageTopNav = () => {
   // VARS
 
   const [openDialog, setOpenDialog] = useState(false);
-  const {
-    dataBuildingManager,
-    statusBuildingManagerEmail,
-    statusBuildingManagerJwt,
-  } = useAuthBuildingManager();
+  const { dataBuildingManager = {} } = useAuthBuildingManager();
+  const buildingManagerStatus = useLandingPageStore(
+    (state) => state.buildingManagerStatus,
+  );
 
   console.log("Hello------------------------------------");
   console.log(dataBuildingManager);
 
+  console.log(buildingManagerStatus);
   // JSX
   return (
     <nav
-      className="border-brand-color-300/80 bg-nav-bar-bg fixed right-0 bottom-0 left-0 flex h-[50px] items-center justify-between border-t-[1px] p-[10px]"
+      className="border-brand-color-300/80 bg-nav-bar-bg fixed top-0 right-0 left-0 flex h-[50px] items-center justify-between border-b-[1px] p-[10px]"
       aria-label="Bottom Navigation"
     >
       <div aria-label="Logo">
         <PropleLogoText />
       </div>
 
-      {dataBuildingManager?.buildingManager?.role === "buildingManager" && (
+      {(buildingManagerStatus === "success" ||
+        dataBuildingManager?.buildingManager?.role === "buildingManager") && (
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -66,8 +68,8 @@ const BottomNav = () => {
         </div>
       )}
 
-      {(statusBuildingManagerEmail === "error" ||
-        statusBuildingManagerJwt === "error") && (
+      {(buildingManagerStatus === "error" ||
+        Object.keys(dataBuildingManager).length === 0) && (
         <div
           className="flex items-center gap-[10px]"
           aria-label="Authentication actions"
@@ -80,4 +82,4 @@ const BottomNav = () => {
   );
 };
 
-export default BottomNav;
+export default LandingPageTopNav;
