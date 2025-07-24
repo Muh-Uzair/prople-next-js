@@ -12,7 +12,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Building2, UserRound } from "lucide-react";
-import SigninBuildingManager from "../signin-building-manager/SigninBuildingManager";
+import SigninBuildingManager from "./SigninBuildingManager";
 import SigninTenant from "../signin-tenant/SigninTenant";
 
 const SignIn: React.FC = () => {

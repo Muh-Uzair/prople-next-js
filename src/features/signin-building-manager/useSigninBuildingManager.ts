@@ -46,6 +46,7 @@ export const useSigninBuildingManager = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(["buildingManager", "byJwt"], data);
       showSuccessToast("Sign in successful");
+      window.location.reload();
     },
     onError: () => {
       showErrorToast("Sign in failed");

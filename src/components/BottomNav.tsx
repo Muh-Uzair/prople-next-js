@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import SignUp from "@/features/building-manager-signup/SignUp";
-import SignIn from "@/features/landing-page/SignIn";
+import SignIn from "@/features/signin-building-manager/SignIn";
 import PropleLogoText from "@/components/PropleLogoText";
 
 import { AlignJustify } from "lucide-react";

@@ -34,6 +34,7 @@ export const useAuthBuildingManager = () => {
       return json.data; // Removed extra .data if not needed
     },
     enabled: sessionStatus === "authenticated" && !!authJsSession?.user?.email,
+    retry: false,
   });
 
   // Query for users with JWT cookie (when Auth.js session doesn't exist)
@@ -63,6 +64,7 @@ export const useAuthBuildingManager = () => {
       return json.data;
     },
     enabled: sessionStatus === "unauthenticated", // Only when no Auth.js session
+    retry: false,
   });
 
   // Return the appropriate data based on session status

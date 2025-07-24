@@ -9,14 +9,20 @@ import BottomNav from "@/components/BottomNav";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 
-export const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // 👈 This stops refetching on tab switch
+    },
+  },
+});
 
 const Page: React.FC = () => {
   // JSX
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
+      <SessionProvider refetchOnWindowFocus={false}>
         <main>
           {" "}
           <LandingPage />

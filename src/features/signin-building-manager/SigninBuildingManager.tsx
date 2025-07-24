@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { useSigninBuildingManager } from "./useSigninBuildingManager";
+import SignInWithGoogle from "./SigninWithGoogle";
 
 interface ISigninBuildingManager {
   setIdentity: Dispatch<SetStateAction<"buildingManager" | "tenant" | "idle">>;
@@ -73,9 +74,7 @@ const SigninBuildingManager: React.FC<ISigninBuildingManager> = ({
           Enter your credentials to continue.
         </DialogDescription>
       </DialogHeader>
-      <div className="mt-[10px] w-full">
-        <Button className="w-full">Sign up with Google</Button>
-      </div>
+      <SignInWithGoogle />
 
       <OrSeparator />
 

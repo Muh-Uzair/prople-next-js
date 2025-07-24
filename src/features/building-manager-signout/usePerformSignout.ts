@@ -15,7 +15,7 @@ export const usePerformSignout = ({ setOpenDialog }: IUsePerformLogout) => {
   const { mutate: mutateSignout, status: statusSignout } = useMutation({
     mutationFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/logout`,
+        `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/signout`,
         {
           method: "POST",
           credentials: "include",
@@ -33,7 +33,7 @@ export const usePerformSignout = ({ setOpenDialog }: IUsePerformLogout) => {
       setOpenDialog(false);
       showSuccessToast("Sign out success");
 
-      signOut({ redirect: false });
+      signOut();
 
       // Remove both building manager queries from cache
       queryClient.removeQueries({

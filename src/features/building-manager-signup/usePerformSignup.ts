@@ -41,6 +41,7 @@ export function usePerformSignup() {
     },
     onSuccess: () => {
       showSuccessToast("Sign up success");
+      window.location.reload();
     },
     onError: () => {
       showErrorToast("Sign up failed");
