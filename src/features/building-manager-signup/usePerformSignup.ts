@@ -2,6 +2,7 @@ import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
 
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 type FormValues = {
   username: string;
@@ -13,6 +14,7 @@ export function usePerformSignup() {
 
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
+  const router = useRouter();
 
   // FUNCTION
   const mutation = useMutation({
@@ -41,7 +43,7 @@ export function usePerformSignup() {
     },
     onSuccess: () => {
       showSuccessToast("Sign up success");
-      window.location.reload();
+      router.push("/building-manager/dashboard/home");
     },
     onError: () => {
       showErrorToast("Sign up failed");

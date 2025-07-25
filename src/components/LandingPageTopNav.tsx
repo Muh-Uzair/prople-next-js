@@ -17,7 +17,7 @@ import {
 import LogoutConfirmDialog from "@/features/building-manager-signout/SignoutConfirmDialog";
 import { useAuthBuildingManager } from "@/hooks/useAuthBuildingManager";
 
-const BottomNav = () => {
+const LandingPageTopNav = () => {
   // VARS
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -33,7 +33,7 @@ const BottomNav = () => {
   // JSX
   return (
     <nav
-      className="border-brand-color-300/80 bg-nav-bar-bg fixed right-0 bottom-0 left-0 flex h-[50px] items-center justify-between border-t-[1px] p-[10px]"
+      className="border-brand-color-300/80 bg-nav-bar-bg fixed top-0 right-0 left-0 flex h-[50px] items-center justify-between border-b-[1px] p-[10px]"
       aria-label="Bottom Navigation"
     >
       <div aria-label="Logo">
@@ -80,4 +80,4 @@ const BottomNav = () => {
   );
 };
 
-export default BottomNav;
+export default LandingPageTopNav;
