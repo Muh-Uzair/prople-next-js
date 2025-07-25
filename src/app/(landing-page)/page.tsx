@@ -9,6 +9,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import LandingPageTopNav from "@/components/LandingPageTopNav";
 
+// faltu
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
