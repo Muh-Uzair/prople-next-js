@@ -25,6 +25,7 @@ import LoadingSpinner from "@/components/spinner-02";
 
 interface ISigninBuildingManager {
   setIdentity: Dispatch<SetStateAction<"buildingManager" | "tenant" | "idle">>;
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 // Zod
@@ -50,6 +51,7 @@ type FormValues = z.infer<typeof formSchema>;
 // CMP CMP CMP
 const SigninBuildingManager: React.FC<ISigninBuildingManager> = ({
   setIdentity,
+  setIsDialogOpen,
 }) => {
   // VARS
   const form = useForm<FormValues>({
@@ -60,7 +62,7 @@ const SigninBuildingManager: React.FC<ISigninBuildingManager> = ({
     },
   });
   const { mutateSigninBuildingManager, statusSigninBuildingManager } =
-    useSigninBuildingManager();
+    useSigninBuildingManager({ setIsDialogOpen });
 
   // FUNCTIONS
   const onSubmit = async (values: FormValues) => {
@@ -125,7 +127,11 @@ const SigninBuildingManager: React.FC<ISigninBuildingManager> = ({
             )}
           />
 
-          <Button type="submit" className="mt-4 w-full">
+          <Button
+            type="submit"
+            disabled={statusSigninBuildingManager === "pending"}
+            className="mt-4 w-full"
+          >
             {statusSigninBuildingManager === "pending" && (
               <>
                 <LoadingSpinner />

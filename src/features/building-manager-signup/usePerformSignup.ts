@@ -1,6 +1,5 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
-
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -9,7 +8,11 @@ type FormValues = {
   password: string;
 };
 
-export function usePerformSignup() {
+interface IUsePerformSignup {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function usePerformSignup({ setIsOpen }: IUsePerformSignup) {
   // VARS
 
   const { showErrorToast } = useCustomErrorToast();
@@ -43,6 +46,7 @@ export function usePerformSignup() {
     },
     onSuccess: () => {
       showSuccessToast("Sign up success");
+      setIsOpen(false);
       router.push("/building-manager/dashboard/home");
     },
     onError: () => {

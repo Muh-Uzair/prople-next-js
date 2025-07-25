@@ -20,9 +20,14 @@ const SignIn: React.FC = () => {
     "buildingManager" | "tenant" | "idle"
   >("idle");
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // 👈 control dialog
+
   return (
     <Dialog
+      open={isDialogOpen}
       onOpenChange={(open) => {
+        setIsDialogOpen(open);
+
         if (!open) {
           setTimeout(() => {
             setIdentity("idle");
@@ -31,7 +36,7 @@ const SignIn: React.FC = () => {
       }}
     >
       <DialogTrigger asChild>
-        <Button>Sign in</Button>
+        <Button onClick={() => setIsDialogOpen(true)}>Sign in</Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
@@ -75,7 +80,10 @@ const SignIn: React.FC = () => {
         )}
 
         {identity === "buildingManager" && (
-          <SigninBuildingManager setIdentity={setIdentity} />
+          <SigninBuildingManager
+            setIdentity={setIdentity}
+            setIsDialogOpen={setIsDialogOpen}
+          />
         )}
 
         {identity === "tenant" && <SigninTenant setIdentity={setIdentity} />}

@@ -1,14 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 
 const SignUpWithGoogle = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    await signIn("google", { callbackUrl: "/building-manager/dashboard/home" });
+  };
+
   return (
     <div className="mt-[10px] w-full">
-      <Button onClick={() => signIn("google")} className="w-full">
-        Sign up with Google
+      <Button
+        onClick={handleGoogleSignIn}
+        className="w-full"
+        disabled={loading}
+      >
+        {loading ? "Signing up..." : "Sign up with Google"}
       </Button>
     </div>
   );

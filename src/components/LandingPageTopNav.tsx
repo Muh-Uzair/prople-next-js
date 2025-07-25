@@ -16,21 +16,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import LogoutConfirmDialog from "@/features/building-manager-signout/SignoutConfirmDialog";
 import { useAuthBuildingManager } from "@/hooks/useAuthBuildingManager";
-import { useLandingPageStore } from "@/stores/useLandingPageStore";
 
 const LandingPageTopNav = () => {
   // VARS
 
   const [openDialog, setOpenDialog] = useState(false);
-  const { dataBuildingManager = {} } = useAuthBuildingManager();
-  const buildingManagerStatus = useLandingPageStore(
-    (state) => state.buildingManagerStatus,
-  );
+  const {
+    dataBuildingManager = {},
+    statusBuildingManagerEmail,
+    statusBuildingManagerJwt,
+  } = useAuthBuildingManager();
 
-  console.log("Hello------------------------------------");
-  console.log(dataBuildingManager);
-
-  console.log(buildingManagerStatus);
   // JSX
   return (
     <nav
@@ -41,8 +37,7 @@ const LandingPageTopNav = () => {
         <PropleLogoText />
       </div>
 
-      {(buildingManagerStatus === "success" ||
-        dataBuildingManager?.buildingManager?.role === "buildingManager") && (
+      {dataBuildingManager?.buildingManager?.role === "buildingManager" && (
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -68,8 +63,8 @@ const LandingPageTopNav = () => {
         </div>
       )}
 
-      {(buildingManagerStatus === "error" ||
-        Object.keys(dataBuildingManager).length === 0) && (
+      {(statusBuildingManagerEmail === "error" ||
+        statusBuildingManagerJwt === "error") && (
         <div
           className="flex items-center gap-[10px]"
           aria-label="Authentication actions"

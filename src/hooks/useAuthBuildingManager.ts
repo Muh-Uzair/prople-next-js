@@ -1,19 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { IBuildingManager } from "@/types/building-manager-types";
-import { useLandingPageStore } from "@/stores/useLandingPageStore";
 
 export const useAuthBuildingManager = () => {
   const { data: authJsSession, status: sessionStatus } = useSession();
-  const buildingManagerStatus = useLandingPageStore(
-    (state) => state.buildingManagerStatus,
-  );
 
   // FUNCTION Query for authenticated users (using Auth.js session)
   const {
     data: dataBuildingManagerEmail = {},
     status: statusBuildingManagerEmail,
-    isLoading: loadingByEmail,
   } = useQuery<IBuildingManager>({
     queryKey: ["buildingManager", "byEmail", authJsSession?.user?.email],
     queryFn: async () => {
@@ -45,9 +40,8 @@ export const useAuthBuildingManager = () => {
   const {
     data: dataBuildingManagerJwt = {},
     status: statusBuildingManagerJwt,
-    isLoading: loadingByJwt,
   } = useQuery({
-    queryKey: ["buildingManager", "byJwt", buildingManagerStatus],
+    queryKey: ["buildingManager", "byJwt"],
     queryFn: async () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/current`,
@@ -78,17 +72,9 @@ export const useAuthBuildingManager = () => {
       ? dataBuildingManagerEmail || {}
       : dataBuildingManagerJwt || {};
 
-  const isLoading =
-    sessionStatus === "loading" || loadingByEmail || loadingByJwt;
-
   return {
     dataBuildingManager,
-    isLoading,
-    sessionStatus,
-    // Individual data for debugging if needed
-    dataBuildingManagerEmail,
     statusBuildingManagerEmail,
-    dataBuildingManagerJwt,
     statusBuildingManagerJwt,
   };
 };

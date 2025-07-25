@@ -134,7 +134,11 @@ const SignUpForm: React.FC<ISignUpForm> = ({ setIsOpen }) => {
           )}
         />
 
-        <Button type="submit" className="mt-4 w-full">
+        <Button
+          type="submit"
+          className="mt-4 w-full"
+          disabled={statusSignUp === "pending"}
+        >
           {statusSignUp === "pending" && (
             <>
               <LoadingSpinner />{" "}

@@ -1,21 +1,26 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
-import { useLandingPageStore } from "@/stores/useLandingPageStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 
 type FormValues = {
   username: string;
   password: string;
 };
 
-export const useSigninBuildingManager = () => {
+interface IUseSigninBuildingManager {
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export const useSigninBuildingManager = ({
+  setIsDialogOpen,
+}: IUseSigninBuildingManager) => {
   //VARS
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
   const queryClient = useQueryClient();
-  const setBuildingManagerStatus = useLandingPageStore(
-    (state) => state.setBuildingManagerStatus,
-  );
+  const router = useRouter();
 
   // FUNCTION
   const {
@@ -50,7 +55,8 @@ export const useSigninBuildingManager = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(["buildingManager", "byJwt"], data);
       showSuccessToast("Sign in successful");
-      setBuildingManagerStatus("success");
+      setIsDialogOpen(false);
+      router.push("/building-manager/dashboard/home");
     },
     onError: () => {
       showErrorToast("Sign in failed");
