@@ -1,8 +1,10 @@
+"use client";
+
 import React, { useState } from "react";
 import SignUp from "@/features/building-manager-signup/SignUp";
-import SignIn from "@/features/landing-page/SignIn";
+import SignIn from "@/features/signin-building-manager/SignIn";
 import PropleLogoText from "@/components/PropleLogoText";
-import { useBuildingManagerStore } from "@/stores/buildingManagerStore";
+
 import { AlignJustify } from "lucide-react";
 import {
   DropdownMenu,
@@ -12,24 +14,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import LogoutConfirmDialog from "@/features/building-manager-logout/LogoutConfirmDialog";
+import LogoutConfirmDialog from "@/features/building-manager-signout/SignoutConfirmDialog";
+import { useAuthBuildingManager } from "@/hooks/useAuthBuildingManager";
 
-const BottomNav = () => {
+const LandingPageTopNav = () => {
   // VARS
-  const { isAuthBuildingManager } = useBuildingManagerStore();
+
   const [openDialog, setOpenDialog] = useState(false);
+  const {
+    dataBuildingManager = {},
+    statusBuildingManagerEmail,
+    statusBuildingManagerJwt,
+  } = useAuthBuildingManager();
 
   // JSX
   return (
     <nav
-      className="border-brand-color-300/80 bg-nav-bar-bg fixed right-0 bottom-0 left-0 flex h-[50px] items-center justify-between border-t-[1px] p-[10px]"
+      className="border-brand-color-300/80 bg-nav-bar-bg fixed top-0 right-0 left-0 flex h-[50px] items-center justify-between border-b-[1px] p-[10px]"
       aria-label="Bottom Navigation"
     >
       <div aria-label="Logo">
         <PropleLogoText />
       </div>
 
-      {isAuthBuildingManager && (
+      {dataBuildingManager?.buildingManager?.role === "buildingManager" && (
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -42,7 +50,7 @@ const BottomNav = () => {
 
               {/* Log out triggers the dialog */}
               <DropdownMenuItem onClick={() => setOpenDialog(true)}>
-                Log out
+                Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -55,7 +63,8 @@ const BottomNav = () => {
         </div>
       )}
 
-      {!isAuthBuildingManager && (
+      {(statusBuildingManagerEmail === "error" ||
+        statusBuildingManagerJwt === "error") && (
         <div
           className="flex items-center gap-[10px]"
           aria-label="Authentication actions"
@@ -68,4 +77,4 @@ const BottomNav = () => {
   );
 };
 
-export default BottomNav;
+export default LandingPageTopNav;

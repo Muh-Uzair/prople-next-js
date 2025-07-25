@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { usePerformLogout } from "./usePerformLogout";
+import { usePerformSignout } from "./usePerformSignout";
 import LoadingSpinner from "@/components/spinner-02";
 
 interface ILogoutConfirmDialog {
@@ -18,19 +18,16 @@ interface ILogoutConfirmDialog {
   setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LogoutConfirmDialog: React.FC<ILogoutConfirmDialog> = ({
+const SignoutConfirmDialog: React.FC<ILogoutConfirmDialog> = ({
   openDialog,
   setOpenDialog,
 }) => {
   // VARS
-  const { mutateLogout, statusLogout } = usePerformLogout();
+  const { mutateSignout, statusSignout } = usePerformSignout({ setOpenDialog });
 
   // FUNCTIONS
   const handleLogout = () => {
-    mutateLogout();
-    if (statusLogout === "success") {
-      setOpenDialog(false);
-    }
+    mutateSignout();
   };
 
   // JSX
@@ -38,7 +35,7 @@ const LogoutConfirmDialog: React.FC<ILogoutConfirmDialog> = ({
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle>Confirm Logout</DialogTitle>
+          <DialogTitle>Confirm Sign out</DialogTitle>
           <DialogDescription>
             Are you sure you want to log out? You will need to sign in again to
             access your dashboard.
@@ -49,12 +46,12 @@ const LogoutConfirmDialog: React.FC<ILogoutConfirmDialog> = ({
             <Button variant="outline">Cancel</Button>
           </DialogClose>
           <Button variant="destructive" onClick={handleLogout}>
-            {statusLogout === "pending" && (
+            {statusSignout === "pending" && (
               <>
                 <LoadingSpinner />
               </>
             )}
-            Log out
+            Sign out
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -62,4 +59,4 @@ const LogoutConfirmDialog: React.FC<ILogoutConfirmDialog> = ({
   );
 };
 
-export default LogoutConfirmDialog;
+export default SignoutConfirmDialog;

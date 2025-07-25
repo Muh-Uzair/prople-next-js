@@ -1,29 +1,36 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 
 type FormValues = {
   username: string;
   password: string;
 };
 
-interface IUsePerformSignup {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+interface IUseSigninBuildingManager {
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function usePerformSignup({ setIsOpen }: IUsePerformSignup) {
-  // VARS
-
+export const useSigninBuildingManager = ({
+  setIsDialogOpen,
+}: IUseSigninBuildingManager) => {
+  //VARS
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   // FUNCTION
-  const mutation = useMutation({
+  const {
+    mutate: mutateSigninBuildingManager,
+    data: dataSigninBuildingManager,
+    status: statusSigninBuildingManager,
+  } = useMutation({
     mutationFn: async (values: FormValues) => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/signup`,
+        `${process.env.NEXT_PUBLIC_BACK_END_URL}/building-manager/login`,
         {
           method: "POST",
           headers: {
@@ -42,20 +49,23 @@ export function usePerformSignup({ setIsOpen }: IUsePerformSignup) {
         throw new Error(errorText || "Signup failed");
       }
 
-      return res.json(); // Or return res if you don't need to parse it
+      const json = await res.json();
+      return json.data;
     },
-    onSuccess: () => {
-      showSuccessToast("Sign up success");
-      setIsOpen(false);
+    onSuccess: (data) => {
+      queryClient.setQueryData(["buildingManager", "byJwt"], data);
+      showSuccessToast("Sign in successful");
+      setIsDialogOpen(false);
       router.push("/building-manager/dashboard/home");
     },
     onError: () => {
-      showErrorToast("Sign up failed");
+      showErrorToast("Sign in failed");
     },
   });
 
   return {
-    signup: mutation.mutate,
-    status: mutation.status,
+    mutateSigninBuildingManager,
+    dataSigninBuildingManager,
+    statusSigninBuildingManager,
   };
-}
+};
