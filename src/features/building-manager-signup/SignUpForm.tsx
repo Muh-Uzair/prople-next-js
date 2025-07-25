@@ -43,7 +43,12 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SignUpForm: React.FC = () => {
+interface ISignUpForm {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+// CMP
+const SignUpForm: React.FC<ISignUpForm> = ({ setIsOpen }) => {
   // VARS
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -53,7 +58,7 @@ const SignUpForm: React.FC = () => {
       confirmPassword: "",
     },
   });
-  const { signup, status: statusSignUp } = usePerformSignup();
+  const { signup, status: statusSignUp } = usePerformSignup({ setIsOpen });
 
   // FUNCTIONS
   const onSubmit = async (values: FormValues) => {

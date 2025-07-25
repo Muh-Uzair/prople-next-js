@@ -1,5 +1,6 @@
 import { useCustomErrorToast } from "@/hooks/useCustomErrorToast";
 import { useCustomSuccessToast } from "@/hooks/useCustomSuccessToast";
+import { useLandingPageStore } from "@/stores/useLandingPageStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
 
@@ -11,6 +12,9 @@ export const usePerformSignout = ({ setOpenDialog }: IUsePerformLogout) => {
   const queryClient = useQueryClient();
   const { showErrorToast } = useCustomErrorToast();
   const { showSuccessToast } = useCustomSuccessToast();
+  const setBuildingManagerStatus = useLandingPageStore(
+    (state) => state.setBuildingManagerStatus,
+  );
 
   const { mutate: mutateSignout, status: statusSignout } = useMutation({
     mutationFn: async () => {
@@ -32,18 +36,15 @@ export const usePerformSignout = ({ setOpenDialog }: IUsePerformLogout) => {
     onSuccess: () => {
       setOpenDialog(false);
       showSuccessToast("Sign out success");
-
-      signOut();
-
-      // Remove both building manager queries from cache
+      signOut({ redirect: false });
       queryClient.removeQueries({
         queryKey: ["buildingManager", "byJwt"],
       });
-
       queryClient.removeQueries({
         queryKey: ["buildingManager", "byEmail"],
-        exact: false, // remove all "byEmail" variations
+        exact: false,
       });
+      setBuildingManagerStatus("error");
     },
     onError: () => {
       showErrorToast("Unable to sign out");

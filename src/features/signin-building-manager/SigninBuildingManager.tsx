@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { useSigninBuildingManager } from "./useSigninBuildingManager";
 import SignInWithGoogle from "./SigninWithGoogle";
+import LoadingSpinner from "@/components/spinner-02";
 
 interface ISigninBuildingManager {
   setIdentity: Dispatch<SetStateAction<"buildingManager" | "tenant" | "idle">>;
@@ -58,11 +59,12 @@ const SigninBuildingManager: React.FC<ISigninBuildingManager> = ({
       password: "",
     },
   });
-  const { mutateCurrBuildingManager } = useSigninBuildingManager();
+  const { mutateSigninBuildingManager, statusSigninBuildingManager } =
+    useSigninBuildingManager();
 
   // FUNCTIONS
   const onSubmit = async (values: FormValues) => {
-    mutateCurrBuildingManager(values);
+    mutateSigninBuildingManager(values);
   };
 
   // JSX
@@ -124,6 +126,11 @@ const SigninBuildingManager: React.FC<ISigninBuildingManager> = ({
           />
 
           <Button type="submit" className="mt-4 w-full">
+            {statusSigninBuildingManager === "pending" && (
+              <>
+                <LoadingSpinner />
+              </>
+            )}
             Sign In
           </Button>
         </form>
