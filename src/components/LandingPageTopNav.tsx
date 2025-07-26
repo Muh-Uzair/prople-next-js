@@ -32,7 +32,7 @@ const LandingPageTopNav = () => {
   return (
     <nav
       className="border-brand-color-300/80 bg-nav-bar-bg fixed top-0 right-0 left-0 flex h-[50px] items-center justify-between border-b-[1px] p-[10px]"
-      aria-label="Bottom Navigation"
+      aria-label="Top Navigation"
     >
       <div aria-label="Logo">
         <PropleLogoText />
