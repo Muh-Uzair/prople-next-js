@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const PropleLogoText: React.FC = () => {
@@ -7,7 +8,9 @@ const PropleLogoText: React.FC = () => {
 
   // JSX
   return (
-    <span className="text-brand-color-500 text-[20px] font-bold">PROPLE</span>
+    <Link href="/">
+      <span className="text-brand-color-500 text-[20px] font-bold">PROPLE</span>
+    </Link>
   );
 };
 
