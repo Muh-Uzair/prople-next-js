@@ -7,14 +7,12 @@ import { QueryClient } from "@tanstack/react-query";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
-import LandingPageTopNav from "@/components/LandingPageTopNav";
-
-// faltu
+import LandingPageLayout from "@/components/LandingPageLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false, // 👈 This stops refetching on tab switch
+      refetchOnWindowFocus: false, //
     },
   },
 });
@@ -25,11 +23,10 @@ const Page: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider refetchOnWindowFocus={false}>
-        <main>
-          {" "}
+        {" "}
+        <LandingPageLayout>
           <LandingPage />
-          <LandingPageTopNav />
-        </main>
+        </LandingPageLayout>
         <Toaster richColors position="top-center" />
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </SessionProvider>

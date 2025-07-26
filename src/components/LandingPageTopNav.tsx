@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import LogoutConfirmDialog from "@/features/building-manager-signout/SignoutConfirmDialog";
 import { useAuthBuildingManager } from "@/hooks/useAuthBuildingManager";
+import Link from "next/link";
 
 const LandingPageTopNav = () => {
   // VARS
@@ -46,7 +47,9 @@ const LandingPageTopNav = () => {
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/building-manager/dashboard/home">Dashboard</Link>
+              </DropdownMenuItem>
 
               {/* Log out triggers the dialog */}
               <DropdownMenuItem onClick={() => setOpenDialog(true)}>
