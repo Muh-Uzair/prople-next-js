@@ -92,6 +92,7 @@ body {
   --color-brand-color-950: oklch(0.293 0.066 243.157);
 
   --color-nav-bar-bg: oklch(98.5% 0.001 106.423);
+  --color-nav-item-phone: oklch(55.3% 0.013 58.071);
 
   --primary: oklch(0.685 0.169 237.323);
   --radius: 0.625rem;
@@ -141,6 +142,7 @@ body {
   --color-brand-color-950: oklch(0.293 0.066 243.157);
 
   --color-nav-bar-bg: oklch(30.818% 0.0255 262.735);
+  --color-nav-item-phone: oklch(55.3% 0.013 58.071);
 
   --primary: oklch(0.685 0.169 237.323);
   --background: oklch(35.04% 0.02899 260.599);

@@ -7,8 +7,9 @@ import { auth } from "../../../../../auth";
 import { cookies } from "next/headers";
 import { IBuildingManager } from "@/types/building-manager-types";
 import { AuthBuildingManagerServer } from "@/hooks/AuthBuildingManagerServer";
-import { IJwtObject } from "@/types/constants";
+import { IJwtObject } from "@/types/constants-types";
 import { redirect } from "next/navigation";
+import { QueryProvider } from "@/providers/query-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,6 +28,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const jwtObject = cookieStore.get("jwt") as IJwtObject;
 
+  // FUNCTION check wether the building manager is auth or not
   const buildingManager: IBuildingManager | null =
     await AuthBuildingManagerServer({
       session,
@@ -43,16 +45,21 @@ export default async function RootLayout({
   // FUNCTIONS
 
   // JSX JSX JSX
+  if (!buildingManager) {
+    return <span>You are not authenticated</span>;
+  }
   return (
     <html lang="en" className="light">
       <body className={roboto.variable}>
-        <main>
-          <DashboardLayout userRole={userRole}>
-            <section className="bp-[50px] tab:pl-[80px] laptopM:pl-[200px] h-screen pt-[50px]">
-              {children}
-            </section>{" "}
-          </DashboardLayout>
-        </main>
+        <QueryProvider>
+          <main>
+            <DashboardLayout userRole={userRole}>
+              <section className="bp-[50px] tab:pl-[80px] laptopM:pl-[200px] h-screen pt-[50px]">
+                {children}
+              </section>{" "}
+            </DashboardLayout>
+          </main>
+        </QueryProvider>
       </body>
     </html>
   );
