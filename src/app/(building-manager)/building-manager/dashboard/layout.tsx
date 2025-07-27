@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import roboto from "../../../../../public/fonts/roboto/roboto";
 import React from "react";
-import BuildingManagerDashboardLayout from "@/components/BuildingManagerDashboardLayout";
+import DashboardLayout from "@/components/DashboardLayout";
+import { auth } from "../../../../../auth";
+import { cookies } from "next/headers";
+import { IBuildingManager } from "@/types/building-manager-types";
+import { AuthBuildingManagerServer } from "@/hooks/AuthBuildingManagerServer";
+import { IJwtObject } from "@/types/constants";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,20 +17,41 @@ export const metadata: Metadata = {
 
 export const experimental_ppr = true;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // VARS
+  const session = await auth();
+  const cookieStore = await cookies();
+  const jwtObject = cookieStore.get("jwt") as IJwtObject;
+
+  const buildingManager: IBuildingManager | null =
+    await AuthBuildingManagerServer({
+      session,
+      jwtObject,
+    });
+
+  if (!buildingManager) {
+    redirect("/");
+  }
+
+  const userRole: string | null =
+    buildingManager?.role === "buildingManager" ? "buildingManager" : null;
+
+  // FUNCTIONS
+
+  // JSX JSX JSX
   return (
     <html lang="en" className="light">
       <body className={roboto.variable}>
         <main>
-          <BuildingManagerDashboardLayout>
-            <section className="bp-[50px] tab:pl-[80px] tab:pt-[50px] laptopM:pl-[200px] h-screen bg-green-300">
+          <DashboardLayout userRole={userRole}>
+            <section className="bp-[50px] tab:pl-[80px] laptopM:pl-[200px] h-screen pt-[50px]">
               {children}
             </section>{" "}
-          </BuildingManagerDashboardLayout>
+          </DashboardLayout>
         </main>
       </body>
     </html>
