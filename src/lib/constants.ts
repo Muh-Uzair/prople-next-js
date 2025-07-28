@@ -32,12 +32,12 @@ export const buildingManagerNavItems = [
   {
     navLabel: "Move in",
     navIcon: LogIn,
-    navUrl: "/building-manager/dashboard/move-in",
+    navUrl: "/building-manager/dashboard/moveIn",
   },
   {
     navLabel: "Move out",
     navIcon: LogOut,
-    navUrl: "/building-manager/dashboard/move-out",
+    navUrl: "/building-manager/dashboard/moveOut",
   },
   {
     navLabel: "Profile",

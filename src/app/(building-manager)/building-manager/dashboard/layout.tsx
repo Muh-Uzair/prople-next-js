@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import roboto from "../../../../../public/fonts/roboto/roboto";
 import React from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import { auth } from "../../../../../auth";
 import { cookies } from "next/headers";
 import { IBuildingManager } from "@/types/building-manager-types";
@@ -23,44 +22,43 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // VARS
-  const session = await auth();
-  const cookieStore = await cookies();
-  const jwtObject = cookieStore.get("jwt") as IJwtObject;
+  try {
+    // VARS
+    const session = await auth();
+    const cookieStore = await cookies();
+    const jwtObject = cookieStore.get("jwt") as IJwtObject;
 
-  // FUNCTION check wether the building manager is auth or not
-  const buildingManager: IBuildingManager | null =
-    await AuthBuildingManagerServer({
-      session,
-      jwtObject,
-    });
+    // FUNCTION check wether the building manager is auth or not
+    const buildingManager: IBuildingManager | null =
+      await AuthBuildingManagerServer({
+        session,
+        jwtObject,
+      });
 
-  if (!buildingManager) {
-    redirect("/");
+    if (!buildingManager) {
+      redirect("/");
+    }
+
+    // FUNCTIONS
+
+    // JSX JSX JSX
+    if (!buildingManager) {
+      return <span>You are not authenticated</span>;
+    }
+    return (
+      <html lang="en" className="light">
+        <body className={roboto.variable}>
+          <QueryProvider>
+            <main>{children}</main>
+          </QueryProvider>
+        </body>
+      </html>
+    );
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(`An error occurred Error => ${err.message} `);
+    } else {
+      console.error("An error occurred rendering layout");
+    }
   }
-
-  const userRole: string | null =
-    buildingManager?.role === "buildingManager" ? "buildingManager" : null;
-
-  // FUNCTIONS
-
-  // JSX JSX JSX
-  if (!buildingManager) {
-    return <span>You are not authenticated</span>;
-  }
-  return (
-    <html lang="en" className="light">
-      <body className={roboto.variable}>
-        <QueryProvider>
-          <main>
-            <DashboardLayout userRole={userRole}>
-              <section className="bp-[50px] tab:pl-[80px] laptopM:pl-[200px] h-screen pt-[50px]">
-                {children}
-              </section>{" "}
-            </DashboardLayout>
-          </main>
-        </QueryProvider>
-      </body>
-    </html>
-  );
 }

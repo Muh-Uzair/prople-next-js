@@ -1,7 +1,7 @@
+import { getQueryClient } from "@/lib/query-client";
 import { IBuildingManager } from "@/types/building-manager-types";
 import { IJwtObject } from "@/types/constants-types";
 import { Session } from "next-auth";
-import { getQueryClient } from "@/lib/query-client";
 
 interface IUseAuthBuildingManagerServer {
   session: Session | null;
